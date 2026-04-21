@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>État des lieux</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+
+  /* TABLEAU PRINCIPAL */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed; /* Force Word à utiliser toute la largeur */
+  }
+
+  td, th {
+    border: 1px solid #000;
+    padding: 6px;
+    font-size: 14px;
+    vertical-align: top;
+  }
+
+  .section-title {
+    background: #e0e0e0;
+    font-weight: bold;
+  }
+
+  input {
+    width: 98%;
+    padding: 4px;
+    font-size: 14px;
+  }
+</style>
+
+</head>
+<body>
+
+<div id="form">
+
+<!-- TABLEAU PRINCIPAL -->
+<table border="1" cellpadding="6" cellspacing="0">
+
+  <!-- TITRE -->
+  <tr>
+    <td colspan="3" style="text-align:center; font-size:22px; font-weight:bold;">
+      FICHE ÉTAT DES LIEUX
+    </td>
+  </tr>
+
+  <!-- INFORMATIONS GÉNÉRALES -->
+  <tr><td colspan="3" style="text-align:center; font-size:16px; font-weight:bold;" class="section-title">Informations générales</td></tr>
+
+  <tr>
+    <td style="width:30%;">Adresse du logement</td>
+    <td colspan="2" style="width:70%;"><input type="text" name="adresse"></td>
+  </tr>
+
+  <tr>
+    <td>Nom de l'étudiant</td>
+    <td colspan="2"><input type="text" name="nom_etudiant"></td>
+  </tr>
+
+  <tr>
+    <td>Date de visite</td>
+    <td colspan="2"><input type="date" name="date_visite"></td>
+  </tr>
+
+  <!-- ETAT DES PIECES -->
+  <tr><td colspan="3" style="text-align:center; font-size:16px; font-weight:bold;" class="section-title">État des pièces</td></tr>
+
+  <tr>
+    <th style="width:30%;">Pièce / Équipement</th>
+    <th style="width:30%;">État</th>
+    <th style="width:40%;">Remarques</th>
+  </tr>
+
+  <tr><td>Chambre</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Salon</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Couloir</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Salle de bain / WC</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Cuisine</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Balcon</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Détecteur de fumée</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Porte</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Mobilier</td><td><input type="text"></td><td><input type="text"></td></tr>
+
+  <!-- SIGNATURES -->
+  <tr><td colspan="3" class="section-title">Signatures</td></tr>
+
+  <tr>
+    <td style="font-weight:bold;">Signature étudiant</td>
+    <td colspan="2"><input type="text"></td>
+  </tr>
+
+  <tr>
+    <td style="font-weight:bold;">Signature agent</td>
+    <td colspan="2"><input type="text"></td>
+  </tr>
+
+</table>
+
+<br>
+<center>
+  <button onclick="exportDoc()">📄 Télécharger en .doc</button>
+</center>
+
+</div>
+
+<script>
+function exportDoc() {
+  const form = document.getElementById('form').cloneNode(true);
+
+  form.querySelectorAll('input').forEach(input => {
+    const span = document.createElement('span');
+    span.textContent = input.value || "";
+    input.parentNode.replaceChild(span, input);
+  });
+
+  const html = `
+    <html xmlns:o='urn:schemas-microsoft-com:office:office'
+          xmlns:w='urn:schemas-microsoft-com:office:word'
+          xmlns='http://www.w3.org/TR/REC-html40'>
+    <head><meta charset='utf-8'></head>
+    <body>${form.innerHTML}</body></html>
+  `;
+
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'etat_des_lieux.doc';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+</script>
+
+</body>
+</html>
